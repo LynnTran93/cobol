@@ -1,0 +1,55 @@
+      ******************************************************************
+      * Author:Lynn Tran
+      * Student Number: 041102082
+      * Date:May 23, 2024
+      * Purpose: Lab 2
+      * Tectonics: cobc
+      ******************************************************************
+      IDENTIFICATION DIVISION.
+      PROGRAM-ID. PRODUCE-REPORT.
+      ENVIRONMENT DIVISION.
+      INPUT-OUTPUT SECTION.
+      FILE-CONTROL.
+        SELECT STOCK-FILE ASSIGN TO "../STOCK.TXT"
+          ORGANIZATION IS LINE SEQUENTIAL.
+      DATA DIVISION.
+      FILE SECTION.
+      FD STOCK-FILE
+      01 STOCK-RECORD.
+        05 COMPANY-NAME        PIC X(25).
+        05 TICKER-SYMBOL       PIC X(7).
+        05 TRADING-INFO.
+          10 VOLUME.
+            15 AVG-VOLUME      PIC 9(8).
+            15 TODAY-VOLUME    PIC 9(8).
+          10 STOCK-PRICE.
+            15 DAY-HIGH        PIC 9(4).
+            15 DAY-LOW         PIC 9(4).
+            15 AT-CLOSING      PIC 9(4).
+      WORKING-STORAGE SECTION.
+      01 WS-END-OF-FILE        PIC X VALUE 'N'.
+      PROCEDURE DIVISION.
+      PRODUCE-STOCK-REPORT.
+        PERFORM INITIALIZE-ROUTINE.
+        PERFORM DISPLAY-ONE-STOCK-RECORD UNTIL WS-END-OF-FILE = 'Y'.
+        PERFORM CLOSE-ROUTINE.
+        STOP RUN.
+      INITIALIZE-ROUTINE.
+        PERFORM OPEN-STOCK-FILE.
+        PERFORM READ-STOCK-RECORD.
+      OPEN-STOCK-FILE.
+        OPEN INPUT STOCK-FILE.
+      READ-STOCK-RECORD.
+        READ STOCK-FILE
+          AT END
+            MOVE 'Y' TO WS-END-OF-FILE
+        END READ.
+      DISPLAY-ONE-STOCK-RECORD.
+        PERFORM DISPLAY-STOCK.
+        PERFORM READ-STOCK-RECORD.
+      DISPLAY-STOCK.
+        DISPLAY "TICKER SYMBOL:" TICKER-SYMBOL.
+        DISPLAY "PRICE AT CLOSING:" AT-CLOSING.
+      CLOSE-ROUTINE.
+        CLOSE STOCK-FILE.
+      END PROGRAM PRODUCE-REPORT.
